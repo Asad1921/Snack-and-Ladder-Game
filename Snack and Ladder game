@@ -1,0 +1,308 @@
+#include<iostream>
+#include<windows.h>
+using namespace std;
+#include<conio.h>
+#include<math.h>
+#include <stdlib.h>
+void gotoRowCol(int rpos, int cpos)
+{
+int xpos=cpos, ypos = rpos;
+COORD scrn;
+HANDLE hOuput = GetStdHandle(STD_OUTPUT_HANDLE);
+scrn.X = cpos;
+scrn.Y = rpos;
+SetConsoleCursorPosition(hOuput, scrn);
+}
+void sleep(int m)
+{
+ for(int j=0;j<m*21000;j++)
+ {
+ }
+}
+void snakes_and_ladders()
+{
+    int rows=5;
+    int col =130;
+    char block=219;
+
+
+    for(int i =0; i<24;i++)
+    {
+        for(int j = 0; j<35;j++)
+        {
+             gotoRowCol(rows,col);
+    cout<<"SNAKES : ";
+    gotoRowCol(rows+2,col);
+    cout<<"--->";
+    gotoRowCol(rows+4,col);
+    cout<<"94 ------> 32 ";
+  gotoRowCol(rows +6,col);
+    cout<<"52 ------> 16 ";
+    gotoRowCol(rows +10,col);
+cout <<"LADDERS : ";
+   gotoRowCol(rows+12,col);
+    cout<<"--->";
+    gotoRowCol(rows+14,col);
+    cout<<"8 ------> 28";
+      gotoRowCol(rows+ 16,col);
+    cout<< "18 ------> 48 ";
+    gotoRowCol(rows+18,col);
+    cout <<"43 ------> 92 ";
+            gotoRowCol(rows-2+i, col-4+j);
+            if (i==0 || i==23 || j==0 || j== 34)
+            {
+                 cout<<block;
+                }
+            else
+                {
+                  cout<<" ";
+                        }
+          }
+    }
+
+}
+
+void outerbox(int height,int width)
+{
+    int rows= 3;
+    int col= 3;
+    char block=219;
+    for(int i =0; i<height;i++)
+    {
+        for(int j = 0; j<width;j++)
+        {
+            gotoRowCol(rows +i, col+j);
+            if (i== 0 || i==height -1 || j==0 || j== width -1)
+            {
+                 cout<<block;
+                }
+            else
+                {
+                  cout<<" ";
+                        }
+          }
+    }
+}
+
+void smallbox(int row,int col,int numbers)
+{
+    int height= 6;
+    int width= 12;
+    char block= 219;
+    for(int i = 0; i<height;i++)
+    {
+        for(int j = 0; j< width;j++)
+        {
+            gotoRowCol(row+i, col+j);
+            if(i==0 || i==height-1 || j== 0 || j==width-1)
+            {
+                cout<<block;
+            }
+            else
+
+        {
+                cout<<" ";
+            }
+        }
+    }
+    gotoRowCol(row+height/2 ,col+width/2 - 1);
+    cout<<numbers;
+}
+
+void horizontal(int row,int &numbers)
+{
+    int col=3;
+
+    for (int i=9; i>=0;i--)
+    {
+        smallbox(row,col+i* 12,numbers);
+        numbers++;
+    }
+}
+
+void vertical()
+{
+    int row=3;
+    int numbers=1;
+
+    for(int i= 9; i>=0;i--)
+    {
+        horizontal(row+i*6,numbers);
+    }
+}
+
+int dice_rolling()
+{
+    int dice=0;
+    do{
+        dice=rand()%6+1;
+        gotoRowCol(39,130);
+        cout<<"Dice Rolling : "<<dice;
+        Sleep(10);
+    }
+    while(!kbhit());
+getch();
+
+    return dice;
+}
+
+void print_player(int position,char character)
+{
+    int row=3+(9-(position-1)/10)*6;
+     int cols=7+(9-(position-1)%10)*12;
+     gotoRowCol(row+1,cols+1);
+     cout<<character;
+}
+void removplayer(int position)
+{
+    int row=3+(9-(position-1)/10)*6;
+     int cols=7+(9-(position-1)%10)*12;
+     gotoRowCol(row+1,cols+1);
+     cout<<" ";
+}
+int snake_Ladders(int position)
+{
+    switch (position)
+    {
+    case 94:
+        return 32;
+    case 52:
+        return 16;
+    case 8:
+        return 28;
+    case 18:
+        return 48;
+    case 43:
+        return 92;
+    default:
+        break;
+    }
+}
+void Position(int ASAD, int Laila)
+{
+
+    gotoRowCol(35,130);
+    cout<<"ASAD: Position is :"<<ASAD;
+    gotoRowCol(36,130);
+    cout<<"Laila: Position is :"<<Laila;
+}
+
+void Play()
+{
+int ASAD = 0; 
+int Laila = 0;
+bool AsadEnter = false;
+int LailaEnter = false;
+    char A= 'A';
+    char L= 'L';
+for(int i=0;i<=30;i++)
+            {
+                char c=219;
+                            gotoRowCol(33, 128+i);
+                            cout<<c;
+            }
+    while (true)
+    {
+        gotoRowCol(31, 131);
+        cout<<"Asad's turn  [Press Key]"<<endl;
+        int dice = dice_rolling();
+        cout<<"  Dice: "<<dice;
+
+        if(!AsadEnter && dice == 6)
+        {
+            AsadEnter = true;
+
+        }
+        else if(AsadEnter)
+        {
+            removplayer(ASAD);
+            ASAD += dice;
+
+            if (ASAD > 100)
+                ASAD -= dice;
+
+            ASAD = snake_Ladders(ASAD);
+
+            print_player(ASAD, A);
+        }
+
+        if (ASAD == 100)
+        {
+            gotoRowCol(49, 128);
+            cout<<" [[[[--ASAD wins the GAME!--]]]]";
+            for(int i=0;i<=32;i++)
+            {
+                char c=219;
+                            gotoRowCol(50, 128+i);
+                            cout<<c;
+            }
+            break;
+        }
+
+        Position(ASAD, Laila);
+
+        gotoRowCol(31, 131);
+        cout<<"Laila's turn [Press Key]" << endl;
+        dice = dice_rolling();
+        cout<<"  Dice: "<<dice;
+
+        if(!LailaEnter && dice == 6)
+        {
+            LailaEnter = true;
+
+        }
+        else if(LailaEnter)
+        {
+            removplayer(Laila);
+            Laila += dice;
+
+            if (Laila > 100)
+                Laila -= dice;
+
+            Laila = snake_Ladders(Laila);
+
+            print_player(Laila, L);
+        }
+
+        if (Laila == 100)
+        {
+            gotoRowCol(49, 128);
+            cout<<"[[[[--Laila wins the GAME!--]]]]";
+            for(int i=0;i<=32;i++)
+            {
+                char c=219;
+                            gotoRowCol(50, 128+i);
+                            cout<<c;
+            }
+            break;
+        }
+
+        Position(ASAD,Laila);
+    }
+}
+
+
+int main()
+{
+    int height=60;
+    int width=120;
+    snakes_and_ladders();
+    outerbox(height, width);
+    vertical();
+    Play();
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
